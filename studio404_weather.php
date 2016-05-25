@@ -1,4 +1,13 @@
 <?php 
+/**
+ * Accuweather.com Weather
+ *
+ * PHP version 5.6.21
+ *
+ * @package Weather
+ * @author Giorgi Gvazava <giorgigvazava87@gmail.com>
+ * @copyright 2016 - 2017 Giorgi Gvazava
+ */
 class studio404_weather{
 	public $url; 
 	public $city; 
