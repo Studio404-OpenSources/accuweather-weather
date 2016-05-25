@@ -49,7 +49,6 @@ class studio404_weather{
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
 		curl_setopt($curl, CURLOPT_REFERER, $this->url);
 		curl_setopt($curl, CURLOPT_ENCODING, "gzip,deflate");
-		curl_setopt($curl, CURLOPT_AUTOREFERER, true);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 		curl_setopt($curl, CURLOPT_FOLLOWLOCATION,true);
