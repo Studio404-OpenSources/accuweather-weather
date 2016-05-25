@@ -87,7 +87,14 @@ class studio404_weather{
 		
 			$contains = $this->contains($DOMXPath);
 			foreach ($this->classArray as $key => $value) {
-				$out[$key] = $contains[$key]->item($this->itemNumber)->nodeValue;
+				if(is_object($contains[$key]->item($this->itemNumber)) && property_exists($contains[$key]->item($this->itemNumber), 'nodeValue')){
+					$out[$key] = $contains[$key]->item($this->itemNumber)->nodeValue;
+				}else{
+					$this->error[] = "Could not get class !";
+					break;
+					return false;
+				}
+				
 			}
 			return $out;
 		}
