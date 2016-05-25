@@ -1,5 +1,4 @@
 <?php 
-header("Content-Type: text/html"); 
 /* Require Class file */
 require_once('studio404_weather.php'); 
 
