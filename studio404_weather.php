@@ -5,7 +5,7 @@ class studio404_weather{
 	public $celsius; 
 	public $error = array();
 
-	public function lunch($url, $tempPath, $classArray){
+	public function lunch($url, $tempPath, $classArray, $itemNumber = 0){
 		if (filter_var($url, FILTER_VALIDATE_URL) === false) {
 			$this->error[] = "Invalid Url !";
 		}else if(!is_dir($tempPath)){
@@ -16,6 +16,7 @@ class studio404_weather{
 			$this->url = $url;
 			$this->tempPath = $tempPath;
 			$this->classArray = $classArray;
+			$this->itemNumber = $itemNumber;
 			$getHtml = $this->getHtmlDom(); 
 			if(!empty($getHtml)){
 				$parseHtml = $this->parseHtml($getHtml);
@@ -77,7 +78,7 @@ class studio404_weather{
 		
 			$contains = $this->contains($DOMXPath);
 			foreach ($this->classArray as $key => $value) {
-				$out[$key] = $contains[$key]->item(0)->nodeValue;
+				$out[$key] = $contains[$key]->item($this->itemNumber)->nodeValue;
 			}
 			return $out;
 		}
