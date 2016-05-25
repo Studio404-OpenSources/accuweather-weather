@@ -3,14 +3,27 @@ class studio404_weather{
 	public $url; 
 	public $city; 
 	public $celsius; 
+	public $error = array();
 
 	public function lunch($url, $tempPath, $classArray){
-		$this->url = $url;
-		$this->tempPath = $tempPath;
-		$this->classArray = $classArray;
-		$getHtml = $this->getHtmlDom(); 
-		$parseHtml = $this->parseHtml($getHtml);
-		return $parseHtml;
+		if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+			$this->error[] = "Invalid Url !";
+		}else if(!is_dir($tempPath)){
+			$this->error[] = "Invalid Directory Path !";
+		}else if(!is_array($classArray)){
+			$this->error[] = "Invalid Class Array Variable !";
+		}else{
+			$this->url = $url;
+			$this->tempPath = $tempPath;
+			$this->classArray = $classArray;
+			$getHtml = $this->getHtmlDom(); 
+			if(!empty($getHtml)){
+				$parseHtml = $this->parseHtml($getHtml);
+				return $parseHtml;
+			}
+			$this->error[] = "Could not recive data from the url !";
+			return false;
+		}
 	}
 
 	public function getHtmlDom(){
@@ -35,30 +48,41 @@ class studio404_weather{
 		$html = curl_exec($curl);
 		curl_close($curl);
 		$file = $this->tempPath.$this->urlToMd5($this->url).'.html';
-		file_put_contents($file, $html);
-		return $file;
+		if(@file_put_contents($file, $html)){
+			return $file;	
+		}
+		$this->error[] = "Could not save file in temporary folder !"; 
+		return false;		
 	}
 
 	public function urlToMd5($url){
-		$out = md5($url);
-		return $out;
+		if(!empty($url)){
+			$out = md5($url);
+			return $out;
+		}
+		$this->error[] = "Could not convert empty string to md5 !";
+		return false;
 	}
 
 	public function parseHtml($file){
 		$out = array();
-		$html = file_get_contents($file); 
-		$internalErrors = libxml_use_internal_errors(true);
+		if(file_exists($file)){
+			$html = file_get_contents($file); 
+			$internalErrors = libxml_use_internal_errors(true);
 
-		$domdocument = new DOMDocument();
-		$domdocument->loadHTML($html);
-		libxml_use_internal_errors($internalErrors);
-		$DOMXPath = new DOMXPath($domdocument);
-
-		$contains = $this->contains($DOMXPath);
-		foreach ($this->classArray as $key => $value) {
-			$out[$key] = $contains[$key]->item(0)->nodeValue;
+			$domdocument = new DOMDocument();
+			$domdocument->loadHTML($html);
+			libxml_use_internal_errors($internalErrors);
+			$DOMXPath = new DOMXPath($domdocument);
+		
+			$contains = $this->contains($DOMXPath);
+			foreach ($this->classArray as $key => $value) {
+				$out[$key] = $contains[$key]->item(0)->nodeValue;
+			}
+			return $out;
 		}
-		return $out;
+		$this->error[] = "Could not get temp file !";
+		return false;
 	}
 
 	public function contains($DOMXPath){
@@ -70,7 +94,12 @@ class studio404_weather{
 	}
 
 	public static function celToFahren($celsius){
-		$fahren = ((int)$celsius * 9/5) + 32;
+		$fahren = 0;
+		try{
+			$fahren = ((int)$celsius * 9/5) + 32;
+		}catch(Exception $e){
+			$this->error[] = $e;
+		}
 		return $fahren;
 	}
 
