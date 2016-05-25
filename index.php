@@ -2,9 +2,7 @@
 class studio404_weather{
 	public $url; 
 	public $city; 
-	public $fahrenheit; 
 	public $celsius; 
-	public $watherImage; 
 
 	public function lunch($url, $tempPath, $classArray){
 		$this->url = $url;
@@ -50,17 +48,17 @@ class studio404_weather{
 		$out = array();
 		$html = file_get_contents($file); 
 		$internalErrors = libxml_use_internal_errors(true);
-		
-	    $domdocument = new DOMDocument();
-	    $domdocument->loadHTML($html);
-	    libxml_use_internal_errors($internalErrors);
-	    $DOMXPath = new DOMXPath($domdocument);
 
-	    $contains = $this->contains($DOMXPath);
-	    foreach ($this->classArray as $key => $value) {
-	    	$out[$key] = $contains[$key]->item(0)->nodeValue;
-	    }
-	   	return $out;
+		$domdocument = new DOMDocument();
+		$domdocument->loadHTML($html);
+		libxml_use_internal_errors($internalErrors);
+		$DOMXPath = new DOMXPath($domdocument);
+
+		$contains = $this->contains($DOMXPath);
+		foreach ($this->classArray as $key => $value) {
+		$out[$key] = $contains[$key]->item(0)->nodeValue;
+		}
+		return $out;
 	}
 
 	public function contains($DOMXPath){
@@ -74,13 +72,16 @@ class studio404_weather{
 
 }
 
+/* You Have To Change Only Url */
+$url = 'http://www.accuweather.com/en/ge/gudauta/166775/weather-forecast/166775';
 $tempPath = "temp/";
 $classArray = array(
 	"condition"=>"cond", 
 	"celsius"=>"temp"
 );
 $studio404_weather = new studio404_weather(); 
-$array = $studio404_weather->lunch('http://www.accuweather.com/en/ge/gudauta/166775/weather-forecast/166775', $tempPath, $classArray);
+$array = $studio404_weather->lunch($url, $tempPath, $classArray);
+
 echo "<pre>"; 
 print_r($array);
 ?>
