@@ -9,9 +9,7 @@
  * @copyright 2016 - 2017 Giorgi Gvazava
  */
 class studio404_weather{
-	public $url; 
-	public $city; 
-	public $celsius; 
+	public $url;  
 	public $error = array();
 
 	public function lunch($url, $tempPath, $classArray, $itemNumber = 0){
@@ -91,10 +89,8 @@ class studio404_weather{
 					$out[$key] = $contains[$key]->item($this->itemNumber)->nodeValue;
 				}else{
 					$this->error[] = "Could not get class !";
-					break;
 					return false;
-				}
-				
+				}				
 			}
 			return $out;
 		}
