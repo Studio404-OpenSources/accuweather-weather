@@ -56,7 +56,7 @@ class studio404_weather{
 
 		$contains = $this->contains($DOMXPath);
 		foreach ($this->classArray as $key => $value) {
-		$out[$key] = $contains[$key]->item(0)->nodeValue;
+			$out[$key] = $contains[$key]->item(0)->nodeValue;
 		}
 		return $out;
 	}
@@ -69,6 +69,10 @@ class studio404_weather{
 		return $out;
 	}
 
+	public static function celToFahren($celsius){
+		$fahren = ((int)$celsius * 9/5) + 32;
+		return $fahren;
+	}
 
 }
 
@@ -82,6 +86,8 @@ $classArray = array(
 $studio404_weather = new studio404_weather(); 
 $array = $studio404_weather->lunch($url, $tempPath, $classArray);
 
-echo "<pre>"; 
-print_r($array);
+// print
+echo "Weather Condition: ".$array['condition']."<br />";
+echo "Weather in celsius: ".$array['celsius']."<br />";
+echo "Weather in Fahrenheit: ".studio404_weather::celToFahren($array['celsius'])."° <br />";
 ?>
