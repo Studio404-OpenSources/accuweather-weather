@@ -1,4 +1,4 @@
-<?php 
+<?php if(!defined("DIR")){ exit(); }
 /**
  * Accuweather.com Weather
  *
