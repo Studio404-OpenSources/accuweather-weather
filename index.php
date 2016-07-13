@@ -1,4 +1,7 @@
 <?php 
+/* define dir */
+define("DIR", __DIR__);
+
 /* Require Class file */
 require_once('studio404_weather.php'); 
 
